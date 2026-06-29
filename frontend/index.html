@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered Course Recommendation System — Discover personalized learning paths using machine learning algorithms including Content-Based Filtering, Collaborative Filtering, and KNN.">
+    <title>CourseAI — Smart Course Recommendations</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ═══ ANIMATED BACKGROUND ═══ -->
+    <div class="bg-animation">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-orb bg-orb--3"></div>
+        <div class="bg-orb bg-orb--4"></div>
+    </div>
+
+    <!-- ═══ AUTH SCREENS (Login / Register) ═══ -->
+    <div class="auth-wrapper" id="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-card glass-card">
+                <div class="auth-card__logo">
+                    <div class="navbar__logo">
+                        <i data-lucide="brain-circuit"></i>
+                    </div>
+                    <span class="navbar__title">Course<span class="accent">AI</span></span>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <div class="auth-form" id="login-form">
+                    <h2>Welcome Back</h2>
+                    <p class="auth-card__subtitle">Sign in to access your personalized recommendations</p>
+                    <div class="auth-alert" id="login-alert" style="display:none;"></div>
+                    <div class="auth-field">
+                        <label for="login-email"><i data-lucide="mail"></i> Email</label>
+                        <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                    </div>
+                    <div class="auth-field">
+                        <label for="login-password"><i data-lucide="lock"></i> Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
+                    </div>
+                    <button class="btn btn--primary btn--full btn--lg" id="login-btn">
+                        <i data-lucide="log-in"></i> Sign In
+                    </button>
+                    <p class="auth-switch">Don't have an account? <a href="#" id="show-register">Create one</a></p>
+                </div>
+
+                <!-- REGISTER FORM -->
+                <div class="auth-form" id="register-form" style="display:none;">
+                    <h2>Create Account</h2>
+                    <p class="auth-card__subtitle">Join CourseAI and discover your perfect learning path</p>
+                    <div class="auth-alert" id="register-alert" style="display:none;"></div>
+                    <div class="auth-field">
+                        <label for="register-name"><i data-lucide="user"></i> Full Name</label>
+                        <input type="text" id="register-name" placeholder="John Doe" autocomplete="name">
+                    </div>
+                    <div class="auth-field">
+                        <label for="register-email"><i data-lucide="mail"></i> Email</label>
+                        <input type="email" id="register-email" placeholder="you@example.com" autocomplete="email">
+                    </div>
+                    <div class="auth-field">
+                        <label for="register-password"><i data-lucide="lock"></i> Password</label>
+                        <input type="password" id="register-password" placeholder="Min 6 characters" autocomplete="new-password">
+                    </div>
+                    <div class="auth-field">
+                        <label for="register-confirm"><i data-lucide="shield-check"></i> Confirm Password</label>
+                        <input type="password" id="register-confirm" placeholder="Re-enter your password" autocomplete="new-password">
+                    </div>
+                    <button class="btn btn--primary btn--full btn--lg" id="register-btn">
+                        <i data-lucide="user-plus"></i> Create Account
+                    </button>
+                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ NAVIGATION (hidden until login) ═══ -->
+    <nav class="navbar" id="navbar" style="display:none;">
+        <div class="navbar__brand">
+            <div class="navbar__logo">
+                <i data-lucide="brain-circuit"></i>
+            </div>
+            <span class="navbar__title">Course<span class="accent">AI</span></span>
+        </div>
+        <ul class="navbar__links">
+            <li><a href="#home" class="nav-link active" data-page="home" id="nav-home">
+                <i data-lucide="home"></i><span>Home</span>
+            </a></li>
+            <li><a href="#dashboard" class="nav-link" data-page="dashboard" id="nav-dashboard">
+                <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+            </a></li>
+            <li><a href="#explore" class="nav-link" data-page="explore" id="nav-explore">
+                <i data-lucide="compass"></i><span>Explore</span>
+            </a></li>
+            <li><a href="#recommend" class="nav-link" data-page="recommend" id="nav-recommend">
+                <i data-lucide="sparkles"></i><span>Recommend</span>
+            </a></li>
+            <li><a href="#analytics" class="nav-link" data-page="analytics" id="nav-analytics">
+                <i data-lucide="bar-chart-3"></i><span>Analytics</span>
+            </a></li>
+        </ul>
+        <div class="navbar__right">
+
+            <div class="navbar__user-info" id="navbar-user-info">
+                <span class="navbar__user-name" id="navbar-user-name"></span>
+                <button class="btn btn--sm btn--glass" id="logout-btn" title="Sign Out">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT (hidden until login) ═══ -->
+    <main class="main" id="main-content" style="display:none;">
+
+        <!-- ── HOME PAGE ── -->
+        <section class="page page--home active" id="page-home">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero__content">
+                    <div class="hero__badge">
+                        <i data-lucide="zap"></i> AI-Powered Recommendations
+                    </div>
+                    <h1 class="hero__title">
+                        Discover Your Perfect<br>
+                        <span class="gradient-text">Learning Path</span>
+                    </h1>
+                    <p class="hero__subtitle">
+                        Our machine learning engine analyzes course content, user behavior, and learning patterns
+                        to recommend the most relevant courses tailored just for you.
+                    </p>
+                    <div class="hero__actions">
+                        <button class="btn btn--primary btn--lg" id="hero-explore-btn">
+                            <i data-lucide="compass"></i> Explore Courses
+                        </button>
+                        <button class="btn btn--glass btn--lg" id="hero-recommend-btn">
+                            <i data-lucide="sparkles"></i> Get Recommendations
+                        </button>
+                    </div>
+                    <div class="hero__stats" id="hero-stats">
+                        <div class="hero__stat">
+                            <span class="hero__stat-value" id="stat-courses">—</span>
+                            <span class="hero__stat-label">Courses</span>
+                        </div>
+                        <div class="hero__stat">
+                            <span class="hero__stat-value" id="stat-categories">—</span>
+                            <span class="hero__stat-label">Categories</span>
+                        </div>
+                        <div class="hero__stat">
+                            <span class="hero__stat-value" id="stat-users">—</span>
+                            <span class="hero__stat-label">Users</span>
+                        </div>
+                        <div class="hero__stat">
+                            <span class="hero__stat-value" id="stat-interactions">—</span>
+                            <span class="hero__stat-label">Interactions</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__visual">
+                    <div class="hero__card-stack">
+                        <div class="hero__floating-card hero__floating-card--1">
+                            <i data-lucide="code-2"></i>
+                            <span>Web Development</span>
+                        </div>
+                        <div class="hero__floating-card hero__floating-card--2">
+                            <i data-lucide="brain"></i>
+                            <span>Machine Learning</span>
+                        </div>
+                        <div class="hero__floating-card hero__floating-card--3">
+                            <i data-lucide="palette"></i>
+                            <span>UI/UX Design</span>
+                        </div>
+                        <div class="hero__floating-card hero__floating-card--4">
+                            <i data-lucide="cloud"></i>
+                            <span>Cloud Computing</span>
+                        </div>
+                        <div class="hero__floating-card hero__floating-card--5">
+                            <i data-lucide="shield-check"></i>
+                            <span>Cybersecurity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ML Method Cards -->
+            <div class="section">
+                <h2 class="section__title">
+                    <i data-lucide="cpu"></i> How Our ML Engine Works
+                </h2>
+                <p class="section__subtitle">Multiple machine learning algorithms work together to find the best courses for you</p>
+                <div class="methods-grid">
+                    <div class="method-card" id="method-content">
+                        <div class="method-card__icon method-card__icon--blue">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                        <h3>Content-Based Filtering</h3>
+                        <p>Analyzes course descriptions, skills, and categories using TF-IDF vectorization and cosine similarity to find courses matching your interests.</p>
+                        <div class="method-card__tag">TF-IDF + Cosine Similarity</div>
+                    </div>
+                    <div class="method-card" id="method-collaborative">
+                        <div class="method-card__icon method-card__icon--purple">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3>Collaborative Filtering</h3>
+                        <p>Uses SVD matrix factorization on user-course interactions to discover hidden patterns and recommend courses liked by similar learners.</p>
+                        <div class="method-card__tag">SVD Matrix Factorization</div>
+                    </div>
+                    <div class="method-card" id="method-knn">
+                        <div class="method-card__icon method-card__icon--teal">
+                            <i data-lucide="git-branch"></i>
+                        </div>
+                        <h3>K-Nearest Neighbors</h3>
+                        <p>Finds the K most similar courses in the feature space using distance metrics, providing fast and interpretable recommendations.</p>
+                        <div class="method-card__tag">KNN + Cosine Distance</div>
+                    </div>
+                    <div class="method-card" id="method-hybrid">
+                        <div class="method-card__icon method-card__icon--amber">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <h3>Hybrid Approach</h3>
+                        <p>Combines content-based and collaborative filtering with weighted scoring to deliver the most accurate personalized recommendations.</p>
+                        <div class="method-card__tag">Weighted Ensemble</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trending Courses -->
+            <div class="section">
+                <h2 class="section__title">
+                    <i data-lucide="trending-up"></i> Trending Courses
+                </h2>
+                <p class="section__subtitle">Most popular courses based on ratings, reviews, and enrollments</p>
+                <div class="courses-grid" id="trending-courses">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Category Browser -->
+            <div class="section">
+                <h2 class="section__title">
+                    <i data-lucide="layout-grid"></i> Browse by Category
+                </h2>
+                <div class="categories-grid" id="categories-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ── DASHBOARD PAGE ── -->
+        <section class="page page--dashboard" id="page-dashboard">
+            <h1><i data-lucide="layout-dashboard"></i> My Dashboard</h1>
+            <h2 id="dash-welcome" style="margin-top:0.5rem; font-weight:600; color:var(--text-color);"></h2>
+            <p class="section__subtitle" id="dash-subtitle">Track your learning progress across enrolled courses</p>
+
+            <!-- Profile Section -->
+            <div id="dash-profile-section" class="dash-user-profile glass-card" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem;">
+                <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                    <span id="profile-initial"></span>
+                </div>
+                <div class="profile-details">
+                    <h3 id="profile-name" style="margin-bottom: 0.2rem; font-size: 1.4rem; color:var(--text-color);"></h3>
+                    <p id="profile-email" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;"></p>
+                    <span class="skill-tag" style="background: rgba(99, 102, 241, 0.1); color: var(--accent-blue); display: inline-flex; align-items: center; gap: 4px;">
+                        <i data-lucide="award" style="width:14px; height:14px;"></i> ML Scholar
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dash-stats" id="dash-stats">
+                <div class="dash-stat glass-card">
+                    <div class="dash-stat__icon dash-stat__icon--blue"><i data-lucide="book-open"></i></div>
+                    <div class="dash-stat__value" id="dash-total-enrolled">0</div>
+                    <div class="dash-stat__label">Enrolled</div>
+                </div>
+                <div class="dash-stat glass-card">
+                    <div class="dash-stat__icon dash-stat__icon--amber"><i data-lucide="loader"></i></div>
+                    <div class="dash-stat__value" id="dash-in-progress">0</div>
+                    <div class="dash-stat__label">In Progress</div>
+                </div>
+                <div class="dash-stat glass-card">
+                    <div class="dash-stat__icon dash-stat__icon--green"><i data-lucide="check-circle-2"></i></div>
+                    <div class="dash-stat__value" id="dash-completed">0</div>
+                    <div class="dash-stat__label">Completed</div>
+                </div>
+                <div class="dash-stat glass-card">
+                    <div class="dash-stat__icon dash-stat__icon--purple"><i data-lucide="activity"></i></div>
+                    <div class="dash-stat__value" id="dash-avg-progress">0%</div>
+                    <div class="dash-stat__label">Avg. Progress</div>
+                </div>
+            </div>
+
+            <!-- Enrolled Courses -->
+            <div class="section" id="dash-courses-section">
+                <h2 class="section__title"><i data-lucide="library"></i> My Courses</h2>
+                <div id="dash-courses-grid" class="dash-courses-grid">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="dash-empty" id="dash-empty" style="display:none;">
+                    <i data-lucide="book-open"></i>
+                    <h3>No Courses Yet</h3>
+                    <p>Start exploring and enroll in courses to track your learning progress here.</p>
+                    <button class="btn btn--primary" id="dash-explore-btn">
+                        <i data-lucide="compass"></i> Explore Courses
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── EXPLORE PAGE ── -->
+        <section class="page page--explore" id="page-explore">
+            <div class="explore-header">
+                <h1><i data-lucide="compass"></i> Explore Courses</h1>
+                <div class="search-bar" id="search-bar">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="search-input" placeholder="Search courses, skills, topics..." autocomplete="off">
+                    <button class="btn btn--sm btn--primary" id="search-btn">Search</button>
+                </div>
+            </div>
+
+            <div class="explore-layout">
+                <!-- Filters Sidebar -->
+                <aside class="filters-panel" id="filters-panel">
+                    <h3><i data-lucide="sliders-horizontal"></i> Filters</h3>
+
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="filter-category">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Difficulty</label>
+                        <select id="filter-difficulty">
+                            <option value="">All Levels</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Minimum Rating</label>
+                        <select id="filter-rating">
+                            <option value="">Any Rating</option>
+                            <option value="4.5">4.5+</option>
+                            <option value="4.0">4.0+</option>
+                            <option value="3.5">3.5+</option>
+                            <option value="3.0">3.0+</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Sort By</label>
+                        <select id="filter-sort">
+                            <option value="rating">Rating</option>
+                            <option value="num_subscribers">Popularity</option>
+                            <option value="num_reviews">Reviews</option>
+                            <option value="duration_hours">Duration</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn--primary btn--full" id="apply-filters-btn">
+                        <i data-lucide="filter"></i> Apply Filters
+                    </button>
+                    <button class="btn btn--glass btn--full" id="reset-filters-btn">
+                        <i data-lucide="rotate-ccw"></i> Reset
+                    </button>
+                </aside>
+
+                <!-- Course Grid -->
+                <div class="explore-content">
+                    <div class="courses-grid" id="explore-courses">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="pagination" id="pagination">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── RECOMMEND PAGE ── -->
+        <section class="page page--recommend" id="page-recommend">
+            <div class="recommend-header">
+                <h1><i data-lucide="sparkles"></i> Personalized Recommendations</h1>
+                <p>Select a recommendation method and get AI-powered course suggestions</p>
+            </div>
+
+            <!-- User Profile Card -->
+            <div class="user-profile-card glass-card" id="user-profile-card">
+                <div class="user-profile-card__header">
+                    <div class="user-profile-card__avatar">
+                        <i data-lucide="user"></i>
+                    </div>
+                    <div>
+                        <h3 id="profile-name">User Profile</h3>
+                        <p id="profile-stats">Loading...</p>
+                    </div>
+                </div>
+                <div class="user-profile-card__details" id="profile-details">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Recommendation Method Tabs -->
+            <div class="rec-tabs" id="rec-tabs">
+                <button class="rec-tab active" data-method="hybrid" id="tab-hybrid">
+                    <i data-lucide="layers"></i> Hybrid
+                </button>
+                <button class="rec-tab" data-method="collaborative" id="tab-collaborative">
+                    <i data-lucide="users"></i> Collaborative
+                </button>
+                <button class="rec-tab" data-method="content" id="tab-content">
+                    <i data-lucide="file-text"></i> Content-Based
+                </button>
+                <button class="rec-tab" data-method="knn" id="tab-knn">
+                    <i data-lucide="git-branch"></i> KNN
+                </button>
+                <button class="rec-tab" data-method="popular" id="tab-popular">
+                    <i data-lucide="trending-up"></i> Popular
+                </button>
+            </div>
+
+            <!-- Content/KNN: course selector -->
+            <div class="course-selector glass-card" id="course-selector" style="display:none;">
+                <h4><i data-lucide="crosshair"></i> Select a Reference Course</h4>
+                <p>Content-based and KNN methods recommend courses similar to a selected course.</p>
+                <div class="course-selector__search">
+                    <input type="text" id="ref-course-search" placeholder="Search for a course...">
+                    <div class="course-selector__results" id="ref-course-results"></div>
+                </div>
+                <div class="course-selector__selected" id="ref-course-selected" style="display:none;">
+                    <span id="ref-course-name"></span>
+                    <button class="btn btn--sm btn--glass" id="ref-course-clear">✕</button>
+                </div>
+                <button class="btn btn--primary" id="get-recs-btn">
+                    <i data-lucide="sparkles"></i> Get Recommendations
+                </button>
+            </div>
+
+            <!-- Recommendations Results -->
+            <div class="rec-results">
+                <div class="rec-results__header" id="rec-results-header" style="display:none;">
+                    <h3 id="rec-method-label">Recommendations</h3>
+                    <span class="rec-results__badge" id="rec-count-badge"></span>
+                </div>
+                <div class="courses-grid" id="rec-courses">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="rec-empty" id="rec-empty">
+                    <i data-lucide="sparkles"></i>
+                    <p>Select a method above to get personalized course recommendations</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── ANALYTICS PAGE ── -->
+        <section class="page page--analytics" id="page-analytics">
+            <h1><i data-lucide="bar-chart-3"></i> Dataset Analytics</h1>
+            <p class="section__subtitle">Interactive visualizations of the course recommendation dataset</p>
+
+            <div class="analytics-grid">
+                <!-- Stat Cards -->
+                <div class="analytics-stat glass-card" id="analytics-stat-1">
+                    <div class="analytics-stat__icon"><i data-lucide="book-open"></i></div>
+                    <div class="analytics-stat__value" id="analytics-total-courses">—</div>
+                    <div class="analytics-stat__label">Total Courses</div>
+                </div>
+                <div class="analytics-stat glass-card" id="analytics-stat-2">
+                    <div class="analytics-stat__icon"><i data-lucide="users"></i></div>
+                    <div class="analytics-stat__value" id="analytics-total-users">—</div>
+                    <div class="analytics-stat__label">Total Users</div>
+                </div>
+                <div class="analytics-stat glass-card" id="analytics-stat-3">
+                    <div class="analytics-stat__icon"><i data-lucide="mouse-pointer-click"></i></div>
+                    <div class="analytics-stat__value" id="analytics-total-interactions">—</div>
+                    <div class="analytics-stat__label">Interactions</div>
+                </div>
+                <div class="analytics-stat glass-card" id="analytics-stat-4">
+                    <div class="analytics-stat__icon"><i data-lucide="star"></i></div>
+                    <div class="analytics-stat__value" id="analytics-avg-rating">—</div>
+                    <div class="analytics-stat__label">Avg Rating</div>
+                </div>
+
+                <!-- Charts -->
+                <div class="chart-card glass-card chart-card--wide" id="chart-card-category">
+                    <h3>Courses by Category</h3>
+                    <canvas id="chart-category"></canvas>
+                </div>
+                <div class="chart-card glass-card" id="chart-card-difficulty">
+                    <h3>Difficulty Distribution</h3>
+                    <canvas id="chart-difficulty"></canvas>
+                </div>
+                <div class="chart-card glass-card" id="chart-card-ratings">
+                    <h3>Rating Distribution</h3>
+                    <canvas id="chart-ratings"></canvas>
+                </div>
+                <div class="chart-card glass-card chart-card--wide" id="chart-card-instructors">
+                    <h3>Top Instructors by Subscribers</h3>
+                    <canvas id="chart-instructors"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── COURSE DETAIL MODAL ── -->
+        <div class="modal-overlay" id="course-modal" style="display:none;">
+            <div class="modal glass-card" id="course-modal-content">
+                <button class="modal__close" id="modal-close" title="Close">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="modal__header">
+                    <div class="modal__category-badge" id="modal-category"></div>
+                    <h2 id="modal-title"></h2>
+                    <div class="modal__meta">
+                        <span id="modal-instructor"><i data-lucide="user"></i></span>
+                        <span id="modal-difficulty"><i data-lucide="signal"></i></span>
+                        <span id="modal-duration"><i data-lucide="clock"></i></span>
+                    </div>
+                </div>
+                <div class="modal__rating" id="modal-rating"></div>
+                <div class="modal__description" id="modal-description"></div>
+                <div class="modal__skills" id="modal-skills"></div>
+                
+                <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-lg); align-items: center; justify-content: space-between;">
+                    <div class="modal__stats-row" style="margin-bottom: 0; border: none; padding: 0;">
+                        <div><strong id="modal-subscribers">0</strong><span>Subscribers</span></div>
+                        <div><strong id="modal-reviews">0</strong><span>Reviews</span></div>
+                    </div>
+                    <button class="btn btn--enroll" id="btn-enroll-course" style="padding: 10px 24px; font-weight: 700;">
+                        <i data-lucide="bookmark-plus"></i> Enroll Now
+                    </button>
+                </div>
+
+                <div class="modal__similar">
+                    <h3><i data-lucide="sparkles"></i> Similar Courses</h3>
+                    <div class="courses-grid courses-grid--sm" id="modal-similar-courses"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══ FOOTER (hidden until login) ═══ -->
+    <footer class="footer" id="app-footer" style="display:none;">
+        <div class="footer__content">
+            <div class="footer__brand">
+                <i data-lucide="brain-circuit"></i>
+                <span>CourseAI</span>
+            </div>
+            <p>ML-Powered Course Recommendation System</p>
+            <p class="footer__tech">Built with Python · Flask · Scikit-learn · JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- ═══ LOADING OVERLAY ═══ -->
+    <div class="loading-overlay" id="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
