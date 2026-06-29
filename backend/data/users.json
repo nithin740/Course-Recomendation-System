@@ -1,0 +1,32 @@
+{
+  "sarugunithin@gmail.com": {
+    "name": "Nithin",
+    "email": "sarugunithin@gmail.com",
+    "password_hash": "614a9fbc4efd0cf0dbd35832e77924d555aeeaa8f1b44d2151358d3929e215b6",
+    "enrolled_courses": {
+      "34": {
+        "progress": 0,
+        "enrolled_at": "2026-03-27T18:57:28.368541",
+        "user_rating": null
+      },
+      "160": {
+        "progress": 4,
+        "enrolled_at": "2026-03-27T19:12:20.804065",
+        "user_rating": null
+      },
+      "10": {
+        "progress": 0,
+        "enrolled_at": "2026-03-27T19:12:46.003331",
+        "user_rating": null
+      }
+    },
+    "ml_user_id": 1
+  },
+  "sarugurushwik@gmail.com": {
+    "name": "Nithin",
+    "email": "sarugurushwik@gmail.com",
+    "password_hash": "7966e4ccdbc15db54f6026df333f18d4f7ad60e2e0c90b73e1e2ea232255fb3b",
+    "enrolled_courses": {},
+    "ml_user_id": 1
+  }
+}
