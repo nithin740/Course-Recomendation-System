@@ -1,7 +1,4 @@
-/**
- * API Client — Handles all backend communication
- * Connects to Flask REST API at localhost:5000
- */
+ 
 
 const API_BASE = 'https://course-recomendation-system-oryt.onrender.com/api';
 
