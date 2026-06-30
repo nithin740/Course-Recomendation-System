@@ -1,6 +1,6 @@
  
 
-const API_BASE = 'https://course-recomendation-system-production.up.railway.app';
+const API_BASE = 'https://course-recomendation-system-production.up.railway.app/api';
 
 const API = {
     // ── Auth ─────────────────────────────────────────────────────────────
