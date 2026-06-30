@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CourseAI — ML-Powered Course Recommendation System
 
 An intelligent course recommendation system that uses machine learning algorithms to provide personalized course suggestions based on user preferences and learning history.
@@ -144,3 +145,6 @@ mlproject/
 - Skill-based and career-path recommendations
 - Feedback-based model retraining
 - Mobile app version
+=======
+# Course-Recomendation-System
+>>>>>>> 7ee4c9e5d95c909337c8de60bd59ad5426b1c7c5
