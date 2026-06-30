@@ -27,14 +27,18 @@ from data_loader import DataLoader
 from recommender import CourseRecommender
 
 # ── Initialize Flask App ─────────────────────────────────────────────────────
-
-CORS(app, resources={
-    "/api/*": {
-        "origins": [
-            "https://nithin740.github.io"
-        ]
+app = Flask(__name__)
+CORS(
+    app,
+    resources={
+        r"/api/*": {
+            "origins": [
+                "https://nithin740.github.io",
+                "https://nithin740.github.io/Course-Recomendation-System"
+            ]
+        }
     }
-})
+)
 
 # ── Load Data & Train Models ────────────────────────────────────────────────
 
