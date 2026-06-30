@@ -520,17 +520,12 @@ def get_stats():
 
 # ── Serve Frontend ───────────────────────────────────────────────────────────
 
-FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
-
-
 @app.route("/")
-def serve_index():
-    return send_from_directory(FRONTEND_DIR, "index.html")
-
-
-@app.route("/<path:path>")
-def serve_static(path):
-    return send_from_directory(FRONTEND_DIR, path)
+def home():
+    return {
+        "message": "Course Recommendation System API",
+        "status": "running"
+    }
 
 
 # ── Run ──────────────────────────────────────────────────────────────────────
