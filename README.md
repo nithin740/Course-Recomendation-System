@@ -86,7 +86,7 @@ python app.py
 
 ### 4. Open in Browser
 
-Navigate to: **http://localhost:5000**
+Navigate to: **https://course-recomendation-system-oryt.onrender.com/**
 
 ## Project Structure
 
